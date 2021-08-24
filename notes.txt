@@ -1,0 +1,21 @@
+
+minigland_xx.blend
+00 - original full stack
+10 - reduced stack
+20 - minigland, four acinii 
+21 - duct mesh, two acinii
+22 - duct outter
+
+
+- acinii without lumen
+- sum acinar cells into intercalated duct  
+
+todo
+- duct mesh
+- cell seeds by group
+- outter mesh
+- grow cells
+- virtual duct and lumen
+- mesh files with face type
+
+ 

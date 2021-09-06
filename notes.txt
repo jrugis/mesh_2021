@@ -5,17 +5,18 @@ minigland_xx.blend
 20 - minigland, four acinii 
 21 - duct mesh, two acinii
 22 - duct outter
-
+23 - 
+24 - duct_full, outter_full. part_outter
+25 - animation testing
 
 - acinii without lumen
 - sum acinar cells into intercalated duct  
 
 todo
-- duct mesh
+- check striated spatial stats
 - cell seeds by group
-- outter mesh
-- grow cells
-- virtual duct and lumen
+- virtual duct
 - mesh files with face type
+- virtual duct and lumen
 
  

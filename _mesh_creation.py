@@ -38,13 +38,13 @@ C_FILE = "_centers.txt"              # cell locations file
 INNER_DUCT = "_inner.ply"            # inner duct mesh file name
 OUTTER_DUCT = "_outter.ply"          # outter duct mesh file name
 DUCT_COLOR = (0.08, 0.8, 0.08, 1.0)  # inner duct color
-C_RADIUS = 0.23                      # seed cell radius
+C_RADIUS = 2.3                      # seed cell radius
 
 # cell type dictionary
 cell_types = {  
   "acinar"       : {"COLOR":(1.000, 0.055, 0.060, 1.0), "PRESSURE":1.8, "STIFFNESS":0.20},
   "intercalated" : {"COLOR":(1.000, 0.100, 0.120, 1.0), "PRESSURE":1.2, "STIFFNESS":0.11},
-  "striated"     : {"COLOR":(1.000, 0.200, 0.240, 1.0), "PRESSURE":8.0, "STIFFNESS":0.11}    
+  "striated"     : {"COLOR":(1.000, 0.200, 0.240, 1.0), "PRESSURE":1.2, "STIFFNESS":0.11}    
 }
 
 
@@ -61,7 +61,9 @@ def create_proto_cell():
   bpy.context.object.modifiers["Cloth"].settings.use_internal_springs = False
   bpy.context.object.modifiers["Cloth"].settings.use_pressure = True
   bpy.context.object.modifiers["Cloth"].settings.tension_stiffness = 0.02
+  
   bpy.ops.object.modifier_add(type = 'COLLISION')
+  bpy.context.object.modifiers["Collision"].settings.cloth_friction = 0
   bpy.data.collections["Cells"].objects.link(bpy.context.object)
   bpy.context.collection.objects.unlink(bpy.context.object) # unlink from main collection
   return
@@ -136,18 +138,20 @@ def save_cell_locations():
   cfile.close()
   return
  
+## save the cell meshes as ply files
+def save_cell_meshes():
+  for obj in bpy.data.collections["Duct"].all_objects: obj.select_set(False)
+  for obj in bpy.data.collections["Cells"].all_objects: obj.select_set(False)
+  for obj in bpy.data.collections["Cells"].all_objects:
+    obj.select_set(True)
+    bpy.ops.export_mesh.ply(filepath=obj.name.replace('.', '_') + "_0.ply",\
+      use_normals=False, use_uv_coords=False, use_colors=False, use_selection=True)
+    obj.select_set(False)
+  return
+
 ## animate (to apply physics) 
 #bpy.context.scene.frame_current = 1
 #for frame in range(C_FRAMES):
 #  bpy.context.view_layer.update()
 #  bpy.context.scene.frame_current += 1
 
-## save the cell meshes...
-## ---- as individual standard ply files
-#for obj in bpy.data.collections["Duct"].all_objects: obj.select_set(False)
-#for obj in bpy.data.collections["Cells"].all_objects: obj.select_set(False)
-#for obj in bpy.data.collections["Cells"].all_objects:
-#  obj.select_set(True)
-#  bpy.ops.export_mesh.ply(filepath=obj.name.replace('.', '_') + "_0.ply",\
-#    use_normals=False, use_uv_coords=False, use_colors=False, use_selection=True)
-#  obj.select_set(False)

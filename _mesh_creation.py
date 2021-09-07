@@ -24,7 +24,8 @@
 # ...
 
 import bpy
-import mathutils 
+import mathutils
+import os 
 
 #-------------------------------------------------------------------------------
 # class (structure) definitions
@@ -36,9 +37,9 @@ import mathutils
 
 C_FILE = "_centers.txt"              # cell locations file
 INNER_DUCT = "_inner.ply"            # inner duct mesh file name
-OUTTER_DUCT = "_outter.ply"          # outter duct mesh file name
+OUTTER_DUCT = "_outer.ply"          # outter duct mesh file name
 DUCT_COLOR = (0.08, 0.8, 0.08, 1.0)  # inner duct color
-C_RADIUS = 2.3                      # seed cell radius
+C_RADIUS = 3.2                       # seed cell radius
 
 # cell type dictionary
 cell_types = {  
@@ -104,15 +105,16 @@ def load_cells(_ctype):
   bpy.data.objects.remove(bpy.data.objects['Icosphere']) # remove the prototype cell
   return
 
-# load duct inner and outter from files
+# load duct inner and outer from files
 def load_duct():
   for obj in bpy.data.collections["Duct"].all_objects: obj.select_set(True)
   for obj in bpy.data.collections["Cells"].all_objects: obj.select_set(False)
   bpy.ops.object.delete()                     # delete existing duct
 
   bpy.ops.import_mesh.ply(filepath = OUTTER_DUCT)
-  bpy.context.object.name = "outter.001"    # duplicate names will auto increment
+  bpy.context.object.name = "outer.001"    # duplicate names will auto increment
   bpy.ops.object.modifier_add(type = 'COLLISION')
+  bpy.context.object.modifiers["Collision"].settings.thickness_outer = 1.0
   bpy.data.collections["Duct"].objects.link(bpy.context.object)
   bpy.context.collection.objects.unlink(bpy.context.object) # unlink from main collection
 
@@ -122,6 +124,7 @@ def load_duct():
   mat.diffuse_color = DUCT_COLOR
   bpy.context.object.data.materials.append(mat) # add material to object
   bpy.ops.object.modifier_add(type = 'COLLISION')
+  bpy.context.object.modifiers["Collision"].settings.thickness_outer = 1.0
   bpy.data.collections["Duct"].objects.link(bpy.context.object)
   bpy.context.collection.objects.unlink(bpy.context.object) # unlink from main collection
   return
@@ -140,6 +143,7 @@ def save_cell_locations():
  
 ## save the cell meshes as ply files
 def save_cell_meshes():
+  os.system("rm Cell*.ply")
   for obj in bpy.data.collections["Duct"].all_objects: obj.select_set(False)
   for obj in bpy.data.collections["Cells"].all_objects: obj.select_set(False)
   for obj in bpy.data.collections["Cells"].all_objects:

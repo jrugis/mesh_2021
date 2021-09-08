@@ -7,7 +7,7 @@ minigland_xx.blend
 22 - duct outter
 23 - 
 24 - duct_full, outter_full. part_outter
-25 - animation testing
+25 - animation testing: stop at frame 21, then two more unconstrained
 
 - acinii without lumen
 - sum acinar cells into intercalated duct  

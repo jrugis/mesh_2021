@@ -1,0 +1,66 @@
+
+
+---------------------------------------------------
+Mini-gland mesh: ply file header
+---------------------------------------------------
+
+---------
+ply
+format ascii 1.0
+comment Mini-Gland mesh format 1.0
+element duct_node NDN
+property float x
+property float y
+property float z
+property float radius
+element duct_segment NDS
+property int node_in
+property int node_out
+property uchar cell_type
+element cell NC
+property int nverts
+property int iverts
+property int nfaces
+property int ifaces
+property int ntets
+property int itets
+property uchar cell_type
+element vertex NV
+property float x
+property float y
+property float z
+element face NF
+property int v1
+property int v2
+property int v3
+property uchar region_type
+property int nearest_duct
+property float duct_point
+element tetrahedron NT
+property int v1
+property int v2
+property int v3
+property int v4
+end_header
+---------
+
+where: 
+NV = total number of vertices
+NF = total number of surface triangle faces
+NT = total number of tetrahedra
+NC = total number of cells
+NDN = number of duct nodes
+NDS = number of duct segments
+
+region_type A = apical
+            L = basolateral
+            B = basal
+
+cell_type A = acinus
+          I = intercalated
+          S = striated		  
+
+notes:
+- only the apical duct cells need to contain tetrahedra 
+- face properties nearest_duct and duct_point only apply to apical region_type faces  		  
+		

@@ -1,0 +1,187 @@
+
+minigland_xx.blend
+00 - original full stack
+10 - reduced stack
+20 - minigland, four acinii 
+21 - duct mesh, two acinii
+22 - duct outter
+23 - 
+24 - duct_full, outter_full. part_outter
+25 - animation testing: stop at frame 21, then two more unconstrained
+
+- acinii without lumen
+- sum acinar cells into intercalated duct  
+
+todo
+- check striated spatial stats
+- cell seeds by group
+- virtual duct
+- mesh files with face type
+- virtual duct and lumen
+
+**********************************************
+**********************************************
+MAIN WORKFLOW
+***************
+imagej (ffmpeg?): trim microscopy image stack
+
+blender: create duct inner and outer meshes
+  use trimmed image stack
+
+blender: create mesh ply files
+  use _mesh_creation.py script
+  animation to 21 constrained, to 23 unconstrained
+ 
+ 
+ 
+ 
+ #################### NOTES FROM CELL_MESH REPO ######################
+ **********************************************
+ **********************************************
+ MAIN WORKFLOW
+ ***************
+ photoshop: create segmented layers, export segmented layers as files
+   cells.psd <- images
+   -> layers/cells_00x_xxa.tif
+
+ bash: combine segmented layers into tiff stacK
+   bash ./convert.sh
+   -> layers/cells.tif, layers/cellsN.tif
+
+ python: reduce image stack (and check for errors)
+   python voxels.py <- layers/cellsN.tif
+   -> layers/cellsN8R.tif
+
+ ***************
+ python create polylines file
+   python vox_geometry.py <- layers/cellsN8R.tif
+   -> geometry/polylines.txt
+
+ ***************
+ python: convert tiff stack to inr format
+   python tif2inr.py <- layers/cellsNx.tif
+   -> mesh3d/cellsx.inr
+
+ CGAL: create mesh with (or without) constraints
+
+   (edge size, facet size, facet distance, cell size) 
+   ~/Downloads/CGAL-4.9/examples/Mesh_3/mesh_3D_image_with_features mesh3d/cells8.inr geometry/cellsN8R_poly.txt 0.6 0.6 0.4 0.8
+       <- mesh3d/cells.inr, geometry/polylines.txt
+
+   (facet size, facet distance, cell size) 
+   ~/Downloads/CGAL-4.9/examples/Mesh_3/mesh_3D_image mesh3d/cells8.inr 0.6 0.4 0.8
+       <- mesh3d/cellsx.inr
+
+   -> out.mesh 
+
+ medit: view the mesh
+   ~/Downloads/medit-linux mesh3d/out_p6-p4-p8_poly.mesh
+
+ paraview: check mesh and polylines alignment  
+   python mesh2vtk.py
+   python poly2vtk.py
+
+ matlab: create smooth msh files from mesh file
+   meshmorph.m <- mesh3d/out_N4_p3-p2-p4.mesh
+   -> mesh3d/out_N4_p3-p2-p4-x.msh
+
+ gmsh: 3D mesh the msh files
+   ~/Downloads/gmsh-2.16.0-Linux/bin/gmsh out_N4_p3-p2-p4-x.msh
+   Geometry | Elementary entities | Add | Volume
+   Mesh | 3D
+   Mesh | Optimize 3D
+   File | Save As | out_N4_p3-p2-p4-xtet.msh
+     Save all (ignore physical groups)
+
+ python: add dns to msh files
+   python label_tubes_in_cells.py <- tubes.msh
+   -> out_N4_p3-p2-p4-xtet.msh
+
+ **********************************************
+ **********************************************
+ 2D CURVATURE EXTRACTION WORKFLOW
+ ********************************
+ matlab: compute 2D line curvature and standard deviation of great arc for each cell
+    matlab cell_curvature_2905.m <- layers/cells_*a.tif
+    -> list: curvature standard deviation for each cell
+    -> layers/cellx_pnts.csv
+    -> layers/cell_boundary_smoothx.csv
+    -> layers/cellx_curv.csv
+    -> layers/cellx_pnts.weight
+
+ python: plot outline (original and smoothed)
+   python plot_outline.py <- layers/cellx_pnts.csv
+                          <- layers/cell_boundary_smoothx.csv
+   -> outline.pdf
+
+ python: plot normaized curvature histogram
+   python plot_curvature.py <- layers/cellx_curv.csv
+                            <- layers/cellx_pnts.weight
+   -> layers/cellx_curv.pdf
+
+ **********************************************
+ **********************************************
+ TESTING
+ ***********
+ python: (testing) convert reduced image stack to vtk's for ParaView
+   python vox2vtk.py <- layers/cellsNxR.tif
+   -> layers/cellsNxRxxx.vtu
+
+ paraview: (testing) view files
+   layers/check_xx.pvsm
+
+ ***********
+ python: check adjacency and create quad boundry mesh
+   python vox_adjacency.py <- layers/cellsNxR.tif
+   -> bounding.msh
+
+ gmsh: convert quad bounding mesh to stl format
+   gmsh bounding.msh -2 -o bounding.stl -format stl -saveall
+
+ blender: smooth and export bounding stl
+   smooth_00.blend
+   -> boundingS.stl
+
+ gmsh: create the 3D mesh
+   gmsh remesh.geo <- boundingS.stl
+   -> remesh.msh
+
+ gmsh: view the 3D mesh
+   gmsh remesh.msh
+
+ python: extract geometry
+   python vox_geometry.py
+   -> geometry/cellsNxR.vtu
+   -> geometry/cells.geo
+
+ paraview: (testing) view geometry
+   geometry/geometry_xx.pvsm
+
+ **********************************************
+ **********************************************
+
+ http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2805160/
+ http://www.cgal.org/
+ http://cvcweb.ices.utexas.edu/cvcwp/
+ http://imagej.net/TrakEM2
+
+ fiji
+   Profile - for cells
+   Treeline or AreaTree - for lumen
+
+
+     © 2021 GitHub, Inc.
+     Terms
+     Privacy
+     Security
+     Status
+     Docs
+
+     Contact GitHub
+     Pricing
+     API
+     Training
+     Blog
+     About
+
+ 

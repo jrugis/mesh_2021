@@ -16,7 +16,12 @@ property float radius
 element duct_segment NDS
 property int node_in
 property int node_out
-property uchar cell_type
+property int cell_type
+end_header
+---------
+ply
+format ascii 1.0
+comment Mini-Gland mesh format 1.0
 element cell NC
 property int nverts
 property int iverts
@@ -24,7 +29,7 @@ property int nfaces
 property int ifaces
 property int ntets
 property int itets
-property uchar cell_type
+property int cell_type
 element vertex NV
 property float x
 property float y
@@ -33,7 +38,7 @@ element face NF
 property int v1
 property int v2
 property int v3
-property uchar region_type
+property int region_type
 property int nearest_duct
 property float duct_point
 element tetrahedron NT
@@ -52,13 +57,13 @@ NC = total number of cells
 NDN = number of duct nodes
 NDS = number of duct segments
 
-region_type A = apical
-            L = basolateral
-            B = basal
+region_type 1 = apical
+            2 = basolateral
+            3 = basal
 
-cell_type A = acinus
-          I = intercalated
-          S = striated		  
+cell_type 1 = acinus
+          2 = intercalated
+          3 = striated		  
 
 notes:
 - only the apical duct cells need to contain tetrahedra 

@@ -22,14 +22,6 @@ end_header
 ply
 format ascii 1.0
 comment Mini-Gland mesh format 1.0
-element cell NC
-property int nverts
-property int iverts
-property int nfaces
-property int ifaces
-property int ntets
-property int itets
-property int cell_type
 element vertex NV
 property float x
 property float y
@@ -50,10 +42,9 @@ end_header
 ---------
 
 where: 
-NV = total number of vertices
-NF = total number of surface triangle faces
-NT = total number of tetrahedra
-NC = total number of cells
+NV = number of vertices
+NF = number of surface triangle faces
+NT = number of tetrahedra
 NDN = number of duct nodes
 NDS = number of duct segments
 

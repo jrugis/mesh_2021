@@ -54,30 +54,31 @@ double utils::get_distance(const Vector3d& p, const Vector3d& v, const Vector3d&
   return ((projection - p).norm());                                 // return distance(p, projection)
 }
 */
-
+/*
 void utils::read_mesh(const std::string file_name, sMeshVals& mesh_vals)
 {
-  std::ifstream cell_file(file_name, std::ios::in | std::ios::binary); // open the mesh file
-  if (not cell_file.is_open()) { fatal_error("mesh file " + file_name + " could not be opened"); }
+  std::ifstream cell_file(file_name, std::ios::in);
+  //std::ifstream cell_file(file_name, std::ios::in | std::ios::binary); // open the mesh file
+  //if (not cell_file.is_open()) { fatal_error("mesh file " + file_name + " could not be opened"); }
 
   // get the mesh vertices (int count, 3x-double vertices)
-  cell_file.read(reinterpret_cast<char*>(&(mesh_vals.vertices_count)), sizeof(int));
-  mesh_vals.vertices.resize(mesh_vals.vertices_count, Eigen::NoChange);
-  cell_file.read(reinterpret_cast<char*>(mesh_vals.vertices.data()), 3 * mesh_vals.vertices_count * sizeof(double));
+  //cell_file.read(reinterpret_cast<char*>(&(mesh_vals.vertices_count)), sizeof(int));
+  //mesh_vals.vertices.resize(mesh_vals.vertices_count, Eigen::NoChange);
+  //cell_file.read(reinterpret_cast<char*>(mesh_vals.vertices.data()), 3 * mesh_vals.vertices_count * sizeof(double));
 
   // get the surface triangles (int count, 3x-int vertex indices)
-  cell_file.read(reinterpret_cast<char*>(&(mesh_vals.surface_triangles_count)), sizeof(int));
-  mesh_vals.surface_triangles.resize(mesh_vals.surface_triangles_count, Eigen::NoChange);
-  cell_file.read(reinterpret_cast<char*>(mesh_vals.surface_triangles.data()), 3 * mesh_vals.surface_triangles_count * sizeof(int));
+  //cell_file.read(reinterpret_cast<char*>(&(mesh_vals.surface_triangles_count)), sizeof(int));
+  //mesh_vals.surface_triangles.resize(mesh_vals.surface_triangles_count, Eigen::NoChange);
+  //cell_file.read(reinterpret_cast<char*>(mesh_vals.surface_triangles.data()), 3 * mesh_vals.surface_triangles_count * sizeof(int));
 
   // get the element tetrahedrons (int count, 4x-int vertex indices)
-  cell_file.read(reinterpret_cast<char*>(&(mesh_vals.tetrahedrons_count)), sizeof(int));
-  mesh_vals.tetrahedrons.resize(mesh_vals.tetrahedrons_count, Eigen::NoChange);
-  cell_file.read(reinterpret_cast<char*>(mesh_vals.tetrahedrons.data()), 4 * mesh_vals.tetrahedrons_count * sizeof(int));
+  //cell_file.read(reinterpret_cast<char*>(&(mesh_vals.tetrahedrons_count)), sizeof(int));
+  //mesh_vals.tetrahedrons.resize(mesh_vals.tetrahedrons_count, Eigen::NoChange);
+  //cell_file.read(reinterpret_cast<char*>(mesh_vals.tetrahedrons.data()), 4 * mesh_vals.tetrahedrons_count * sizeof(int));
 
   cell_file.close();
 }
-
+*/
 /*
 void utils::save_matrix(const std::string file_name, int bytes, char* data)
 {

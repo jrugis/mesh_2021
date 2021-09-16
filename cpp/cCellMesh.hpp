@@ -1,7 +1,7 @@
 /*
  * cCellMesh.hpp
  *
- *	Created on: 2/8/2021
+ *	Created on: 14/09/2021
  *  Author: jrugis
  */
 
@@ -13,30 +13,42 @@
 
 #include "global_defs.hpp"
 
+class cDuctTree;
+
 class cCellMesh {
   public:
-  cCellMesh(const std::string mesh_name);
+  cCellMesh(const std::string mesh_name, const cDuctTree* dtree);
   ~cCellMesh();
   void print_info();
 
-  sMeshVals mesh_vals;               // vertices, surface_triangles, tetrahedrons and their counts
+  int ctype;                   // this cell type (ACINUS, INTERCALATED or STRIATED)
+  int vertices_count;
+  int surface_triangles_count;
+  int tetrahedrons_count;
+  MatrixN3d vertices;          // 3x coordinate
+  MatrixN3i surface_triangles; // 3x vertex indices
+  MatrixN4i tetrahedrons;      // 4x vertex indices
+  MatrixN1i n_di;              // nearest duct segment index (per node)
+  MatrixN1d n_dfnd;            // distance from nearest duct segment (per node)
+  MatrixN1d n_dad;             // distance along duct segment from in to out (per node)
+
 //  MatrixNCi common_triangles;        // this triangle, other cell, other triangle
 //  MatrixNCi common_apical_triangles; // this triangle, other cell, other triangle
 //  MatrixN1i apical_triangles;        // surface triangle indicies
 //  MatrixN1i basal_triangles;         // surface triangle indicies
-//  MatrixN1d n_dfa;                   // distance from apical (per node)
 //  MatrixN1d e_dfa;                   // distance from apical (per element)
 //  MatrixN1d e_dfb;                   // distance from basal (per element)
 //  int common_triangles_count, apical_triangles_count, basal_triangles_count;
 
   private:
-  std::string id;
 //  cCell_calcium* parent;
 //  void calc_common();
 //  void calc_dfa();
 //  void calc_apical_basal();
 //  void calc_dfb();
-//  void mesh_calcs();
+  void read_mesh_file(std::string mesh_name);
+  void write_mesh_file();
+  void calc_nd(const cDuctTree* dtree);
 //  void identify_common_apical_triangles();
 };
 

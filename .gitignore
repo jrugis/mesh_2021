@@ -4,3 +4,5 @@ __pycache__/
 Cell*.ply
 minigland_26.blend
 *.blend1
+*.o
+ply2ply

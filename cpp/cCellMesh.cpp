@@ -1,9 +1,14 @@
 /*
  * cCellMesh.cpp
  *
- *	Created on: 2/8/2021
+ *	Created on: 14/09/2021
  *	Author: jrugis
  */
+
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/tokenizer.hpp>
 
 #include <cmath>
 #include <fstream>
@@ -13,21 +18,102 @@
 #include <vector>
 
 #include "cCellMesh.hpp"
-//#include "cLumenTree.hpp"
+#include "cDuctTree.hpp"
 #include "utils.hpp"
 
-cCellMesh::cCellMesh(const std::string mesh_name)
+cCellMesh::cCellMesh(const std::string mesh_name, const cDuctTree* dtree)
 {
-  // initialise member variables
-  //parent = p;
-  id = mesh_name;
-  std::cout << "<CellMesh> reading mesh file: " + id << std::endl;
-  utils::read_mesh(id, mesh_vals);
-  //mesh_calcs();
-  //identify_common_apical_triangles();
+  std::cout << "<CellMesh> reading mesh file: " + mesh_name << std::endl;
+  read_mesh_file(mesh_name);
+  std::cout << "<CellMesh> calculating node properties... " << std::endl;
+  calc_nd(dtree);
+  write_mesh_file();
 }
 
 cCellMesh::~cCellMesh() {}
+
+void cCellMesh::read_mesh_file(std::string mesh_name)
+{
+  char ct = mesh_name.at(mesh_name.length()-5);
+  if(ct=='A') ctype = ACINUS;
+  else if(ct=='I') ctype = INTERCALATED;
+  else if(ct=='S') ctype = STRIATED;
+  else ctype = UNKNOWN;
+  
+  std::string line;                    // file line buffer
+  std::vector<std::string> tokens;     // tokenized line
+
+  // open the mesh file
+  std::ifstream mesh_file(mesh_name); 
+  // get the total mesh vertex count
+  while (getline(mesh_file, line)) {
+   	boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+   	if (tokens[1]=="vertex" ) break;
+  }
+  vertices_count = atoi(tokens[2].c_str());
+  // get the total face count
+  while (getline(mesh_file, line)) {
+   	boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+   	if (tokens[1]=="face" ) break;
+  }
+  surface_triangles_count = atoi(tokens[2].c_str());
+  // get the total tetrahedron count
+  if(ctype == ACINUS ){
+    while (getline(mesh_file, line)) {
+      boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+   	  if (tokens[1]=="tetrahedron" ) break;
+    }
+    tetrahedrons_count = atoi(tokens[2].c_str());
+  }
+  else tetrahedrons_count= 0;
+  // skip over the rest of the header
+  while (getline(mesh_file, line)) {
+   	boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+   	if (tokens[0]=="end_header" ) break;
+  }
+  // get vertices for this cell
+  vertices.resize(vertices_count, Eigen::NoChange);
+  for(int i=0; i<vertices_count; i++){
+  	getline(mesh_file, line);
+  	boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+  	for(int j=0; j<3; j++) vertices(i,j) = std::stod(tokens[j]);
+  }
+  // get faces for this cell
+  surface_triangles.resize(surface_triangles_count, Eigen::NoChange);
+  for(int i=0; i<surface_triangles_count; i++){
+  	getline(mesh_file, line);
+  	boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+  	for(int j=0; j<3; j++) surface_triangles(i,j) = std::stoi(tokens[j+1]);
+  }
+  // get tetrahedra for this cell
+  tetrahedrons.resize(tetrahedrons_count, Eigen::NoChange);
+  for(int i=0; i<tetrahedrons_count; i++){
+  	getline(mesh_file, line);
+  	boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+  	for(int j=0; j<4; j++) tetrahedrons(i,j) = std::stoi(tokens[j+1]);
+  }
+  mesh_file.close();
+}
+
+void cCellMesh::write_mesh_file()
+{
+}
+
+void cCellMesh::print_info()
+{
+  std::cout << "<CellMesh> vertices_count: " << vertices_count << std::endl;
+  std::cout << "<CellMesh> surface_triangles_count: " << surface_triangles_count << std::endl;
+  std::cout << "<CellMesh> tetrahedrons_count: " << tetrahedrons_count << std::endl;
+}
+
+void cCellMesh::calc_nd(const cDuctTree* dtree) // node to duct measurements 
+{
+  n_di.resize(vertices_count, Eigen::NoChange);   // nearest duct segment index
+  n_dfnd.resize(vertices_count, Eigen::NoChange); // distance to the nearest duct segment
+  n_dad.resize(vertices_count, Eigen::NoChange);  // distance along nearest duct segment
+  //for (int n = 0; n < vertices_count; n++) lumen.get_dnl(vertices.row(n), &n_di(n), &n_dfnd(n), &n_dad(n));
+}
+
 
 /*
 void cCellMesh::calc_dfa()
@@ -225,42 +311,5 @@ void cCellMesh::identify_common_apical_triangles()
     }
   }
 }
-
-void cCellMesh::mesh_calcs()
-{
-  parent->out << "<CellMesh> calculating derived properties... " << std::endl;
-  calc_common();
-  calc_dfa();          // do this first,				distance from apical (per node and per element)
-  calc_apical_basal(); // then this,						identify apical and basal triangles
-  calc_dfb();          // finally this.				  distance from basal (per element)
-}
 */
-void cCellMesh::print_info()
-{
-  std::cout << "<CellMesh> vertices_count: " << mesh_vals.vertices_count << std::endl;
-  std::cout << "<CellMesh> tetrahedrons_count: " << mesh_vals.tetrahedrons_count << std::endl;
-  std::cout << "<CellMesh> surface_triangles_count: " << mesh_vals.surface_triangles_count << std::endl;
-  //parent->out << "<CellMesh> apical_triangles_count: " << apical_triangles_count << std::endl;
-  //parent->out << "<CellMesh> basal_triangles_count: " << basal_triangles_count << std::endl;
-  //parent->out << "<CellMesh> common_triangles_count: " << common_triangles_count << std::endl;
 
-  // ***********************************************************
-  // utils::save_matrix("vertices_" + id + ".bin", 3 * mesh_vals.vertices_count * sizeof(double),
-  //                   reinterpret_cast<char*>(mesh_vals.vertices.data()));
-  // utils::save_matrix("triangles_" + id + ".bin", 3 * mesh_vals.surface_triangles_count * sizeof(int),
-  //                   reinterpret_cast<char*>(mesh_vals.surface_triangles.data()));
-  // utils::save_matrix("tetrahedrons_" + id + ".bin", 4 * mesh_vals.tetrahedrons_count * sizeof(int),
-  //                   reinterpret_cast<char*>(mesh_vals.tetrahedrons.data()));
-  // utils::save_matrix("apical_" + id + ".bin", apical_triangles_count * sizeof(int),
-  //                   reinterpret_cast<char*>(apical_triangles.data()));
-  // utils::save_matrix("n_dfa_" + id + ".bin", mesh_vals.vertices_count * sizeof(double), reinterpret_cast<char*>(n_dfa.data()));
-  // utils::save_matrix("e_dfa_" + id + ".bin", mesh_vals.tetrahedrons_count * sizeof(double),
-  //                   reinterpret_cast<char*>(e_dfa.data()));
-  // utils::save_matrix("common_" + id + ".bin", 3 * common_triangles_count * sizeof(int),
-  //                   reinterpret_cast<char*>(common_triangles.data()));
-  // utils::save_matrix("basal_" + id + ".bin", basal_triangles_count * sizeof(int),
-  //                   reinterpret_cast<char*>(basal_triangles.data()));
-  // utils::save_matrix("e_dfb_" + id + ".bin", mesh_vals.tetrahedrons_count * sizeof(double),
-  //                   reinterpret_cast<char*>(e_dfb.data()));
-  // ***********************************************************
-}

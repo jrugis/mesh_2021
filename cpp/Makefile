@@ -31,8 +31,8 @@ CPP_LIBS = -lstdc++
 
 ###########################################################################################
 
-EXE = ./msh2ply
-OBJS = main.o cCellMesh.o utils.o
+EXE = ./ply2ply
+OBJS = main.o cCellMesh.o cDuctTree.o utils.o
 SRC = ./
 
 all: $(EXE)
@@ -41,6 +41,9 @@ main.o: $(SRC)/main.cpp
 	$(CPP) $(CPP_FLAGS) $(CPP_INCLUDES) -o $@ -c $<
 
 cCellMesh.o: $(SRC)/cCellMesh.cpp $(SRC)/cCellMesh.hpp $(SRC)/utils.hpp $(SRC)/global_defs.hpp
+	$(CPP) $(CPP_FLAGS) $(CPP_INCLUDES) -o $@ -c $<
+
+cDuctTree.o: $(SRC)/cDuctTree.cpp $(SRC)/cDuctTree.hpp $(SRC)/utils.hpp $(SRC)/global_defs.hpp
 	$(CPP) $(CPP_FLAGS) $(CPP_INCLUDES) -o $@ -c $<
 
 utils.o: $(SRC)/utils.cpp $(SRC)/utils.hpp $(SRC)/global_defs.hpp

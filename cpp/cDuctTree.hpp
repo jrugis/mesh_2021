@@ -1,21 +1,21 @@
 /*
- * cLumenTree.hpp
+ * cDuctTree.hpp
  *
- *	Created on: 08/10/2019
+ *	Created on: 14/09/2021
  *			Author: jrugis
  */
 
-#ifndef CLUMENTREE_H_
-#define CLUMENTREE_H_
+#ifndef CDUCTTREE_H_
+#define CDUCTTREE_H_
 
 #include <string>
 
 #include "global_defs.hpp"
 
-class cLumenTree {
+class cDuctTree {
   public:
-  cLumenTree(std::ofstream& out);
-  ~cLumenTree();
+  cDuctTree(std::string fname);
+  ~cDuctTree();
 
   double get_dnl(const Eigen::Vector3d p);
 
@@ -26,8 +26,8 @@ class cLumenTree {
   MatrixN3d points;                 // 3x coordinate
   MatrixN2i segments;               // line segment indices, 2x points
 
-  void get_segments();
+  void get_segments(std::string fname);
   void print_info();
 };
 
-#endif /* CLUMENTREE_ */
+#endif /* CDUCTTREE_ */

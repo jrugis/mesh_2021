@@ -16,7 +16,7 @@
 #include "cDuctTree.hpp"
 #include "cCellMesh.hpp"
 
-// the main program function for each mpi node
+// the main program
 int main(int argc, char** args)
 {
   struct timespec start, end;
@@ -29,9 +29,10 @@ int main(int argc, char** args)
   // iterate through the cell mesh files outputing a copy of each one with additional data
   for (const auto &file : std::filesystem::directory_iterator("./meshes")){
 	std::string fpath = std::filesystem::path(file.path());
-	if(fpath.find("Cell_")==std::string::npos) continue;
-    cCellMesh* cmesh = new cCellMesh(fpath, dtree);    // convert a cell mesh file
-    cmesh->print_info();  
+	if(fpath.find("bCell_")==std::string::npos) continue;
+    cCellMesh* cmesh = new cCellMesh(fpath);    // convert a cell mesh file
+	cmesh->calc_nd(dtree);
+	cmesh->write_mesh_file(fpath.erase(9,1));
     delete cmesh;
   }
   delete dtree;

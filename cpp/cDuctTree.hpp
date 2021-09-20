@@ -16,17 +16,14 @@ class cDuctTree {
   public:
   cDuctTree(std::string fname);
   ~cDuctTree();
-
-  double get_dnl(const Eigen::Vector3d p);
+  void get_dnd(Eigen::Vector3d p, int* seg, double* dist, double* pdist);
 
   private:
-  std::string id;
-  std::ofstream* out;
-  int points_count, segments_count; // the number of points and segments in the lumen tree
-  MatrixN3d points;                 // 3x coordinate
+  int nodes_count, segments_count;  // the number of nodes and segments in the lumen tree
+  MatrixN3d nodes;                  // 3x coordinate
   MatrixN2i segments;               // line segment indices, 2x points
-
-  void get_segments(std::string fname);
+  MatrixN1d radius;                 // duct radius (per node)
+  void read_mesh_file(std::string mesh_name);
   void print_info();
 };
 

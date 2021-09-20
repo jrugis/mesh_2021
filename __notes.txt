@@ -1,3 +1,5 @@
+**********************************************
+**********************************************
 
 minigland_xx.blend
 00 - original full stack
@@ -12,12 +14,16 @@ minigland_xx.blend
 - acinii without lumen
 - sum acinar cells into intercalated duct  
 
+visualisation notes:
+ Blender: multi-material assigned to object then by face
+    Gmsh: arbitrary named scalars assigned to vertices (float)
+Paraview: fixed names and types for vertices & faces (uchar only?) 
+     vertex - "x", "y", "z", "u","v", "nx", "ny", "nz", "red", "green", "blue", and "alpha" 
+     face   - "vertex_indices", "intensity", "red", "green", "blue", and "alpha"
+
 todo
-- check striated spatial stats
-- cell seeds by group
-- virtual duct
+- cell seeds by group?
 - mesh files with face type
-- virtual duct and lumen
 
 **********************************************
 **********************************************
@@ -31,9 +37,16 @@ blender: create duct inner and outer meshes
 blender: create mesh ply files
   use _mesh_creation.py script
   animation to 21 constrained, to 23 unconstrained
- 
- 
- 
+  _duct.ply
+  bCell_xxx_X.ply
+  
+gmsh: add tetrahedorns
+  bCell_xxx_A.ply -> gCell_xxx_A.mesh
+   
+cpp: add calculated values
+  _duct.ply + bCell_xxx_S.ply -> Cell_xxx_S.ply
+  _duct.ply + bCell_xxx_I.ply -> Cell_xxx_I.ply
+  _duct.ply + gCell_xxx_A.ply -> Cell_xxx_A.ply
  
  #################### NOTES FROM CELL_MESH REPO ######################
  **********************************************

@@ -1,12 +1,12 @@
 ply
 format ascii 1.0
 comment Mini-Gland mesh format 1.0
-element duct_node 3
+element duct_node 5
 property float x
 property float y
 property float z
 property float radius
-element duct_segment 2
+element duct_segment 4
 property int node_in
 property int node_out
 property int cell_type

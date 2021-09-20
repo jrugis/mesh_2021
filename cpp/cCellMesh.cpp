@@ -21,19 +21,17 @@
 #include "cDuctTree.hpp"
 #include "utils.hpp"
 
-cCellMesh::cCellMesh(const std::string mesh_name, const cDuctTree* dtree)
+cCellMesh::cCellMesh(const std::string mesh_name)
 {
-  std::cout << "<CellMesh> reading mesh file: " + mesh_name << std::endl;
   read_mesh_file(mesh_name);
-  std::cout << "<CellMesh> calculating node properties... " << std::endl;
-  calc_nd(dtree);
-  write_mesh_file();
+  print_info();  
 }
 
 cCellMesh::~cCellMesh() {}
 
 void cCellMesh::read_mesh_file(std::string mesh_name)
 {
+  std::cout << "<CellMesh> reading mesh file: " + mesh_name << std::endl;
   char ct = mesh_name.at(mesh_name.length()-5);
   if(ct=='A') ctype = ACINUS;
   else if(ct=='I') ctype = INTERCALATED;
@@ -95,8 +93,15 @@ void cCellMesh::read_mesh_file(std::string mesh_name)
   mesh_file.close();
 }
 
-void cCellMesh::write_mesh_file()
+void cCellMesh::write_mesh_file(std::string mesh_name)
 {
+  std::cout << "<CellMesh> writing mesh file: " + mesh_name << std::endl;
+
+  // create the mesh file
+  std::ofstream mesh_file(mesh_name); 
+
+
+  mesh_file.close();
 }
 
 void cCellMesh::print_info()
@@ -106,14 +111,24 @@ void cCellMesh::print_info()
   std::cout << "<CellMesh> tetrahedrons_count: " << tetrahedrons_count << std::endl;
 }
 
-void cCellMesh::calc_nd(const cDuctTree* dtree) // node to duct measurements 
+void cCellMesh::calc_nd(cDuctTree* dtree) // triangle to duct measurements 
 {
-  n_di.resize(vertices_count, Eigen::NoChange);   // nearest duct segment index
-  n_dfnd.resize(vertices_count, Eigen::NoChange); // distance to the nearest duct segment
-  n_dad.resize(vertices_count, Eigen::NoChange);  // distance along nearest duct segment
-  //for (int n = 0; n < vertices_count; n++) lumen.get_dnl(vertices.row(n), &n_di(n), &n_dfnd(n), &n_dad(n));
+  std::cout << "<CellMesh> Calculating duct distances and face types..." << std::endl;
+  t_di.resize(surface_triangles_count, Eigen::NoChange);       // nearest duct segment index
+  t_dfnd.resize(surface_triangles_count, Eigen::NoChange);     // distance to the nearest duct segment
+  t_dad.resize(surface_triangles_count, Eigen::NoChange);      // distance along nearest duct segment
+  tri_types.resize(surface_triangles_count, Eigen::NoChange); 
+  for (int n = 0; n < surface_triangles_count; n++){
+    Vector3d v1 = vertices.row(surface_triangles(n,0));
+    Vector3d v2 = vertices.row(surface_triangles(n,1));
+    Vector3d v3 = vertices.row(surface_triangles(n,2));
+    Vector3d cp = (v1 + v2 + v3) / 3.0;        // use center point of triangle for distance calculations
+	dtree->get_dnd(cp, &t_di(n), &t_dfnd(n), &t_dad(n));
+	if(t_dfnd(n) < APICAL_D) tri_types(n) = APICAL;
+	else if(t_dfnd(n) > BASAL_D) tri_types(n) = BASAL;
+    else tri_types(n) = BASOLATERAL;
+  }
 }
-
 
 /*
 void cCellMesh::calc_dfa()

@@ -32,7 +32,7 @@ property int v2
 property int v3
 property int region_type
 property int nearest_duct
-property float duct_point
+property float duct_dist
 element tetrahedron NT
 property int v1
 property int v2

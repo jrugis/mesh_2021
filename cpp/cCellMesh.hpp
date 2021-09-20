@@ -8,6 +8,9 @@
 #ifndef CCELLMESH_H_
 #define CCELLMESH_H_
 
+#define APICAL_D 5 
+#define BASAL_D 16 
+
 #include <Eigen/Dense>
 #include <string>
 
@@ -17,10 +20,8 @@ class cDuctTree;
 
 class cCellMesh {
   public:
-  cCellMesh(const std::string mesh_name, const cDuctTree* dtree);
+  cCellMesh(const std::string mesh_name);
   ~cCellMesh();
-  void print_info();
-
   int ctype;                   // this cell type (ACINUS, INTERCALATED or STRIATED)
   int vertices_count;
   int surface_triangles_count;
@@ -28,28 +29,16 @@ class cCellMesh {
   MatrixN3d vertices;          // 3x coordinate
   MatrixN3i surface_triangles; // 3x vertex indices
   MatrixN4i tetrahedrons;      // 4x vertex indices
-  MatrixN1i n_di;              // nearest duct segment index (per node)
-  MatrixN1d n_dfnd;            // distance from nearest duct segment (per node)
-  MatrixN1d n_dad;             // distance along duct segment from in to out (per node)
-
-//  MatrixNCi common_triangles;        // this triangle, other cell, other triangle
-//  MatrixNCi common_apical_triangles; // this triangle, other cell, other triangle
-//  MatrixN1i apical_triangles;        // surface triangle indicies
-//  MatrixN1i basal_triangles;         // surface triangle indicies
-//  MatrixN1d e_dfa;                   // distance from apical (per element)
-//  MatrixN1d e_dfb;                   // distance from basal (per element)
-//  int common_triangles_count, apical_triangles_count, basal_triangles_count;
+  MatrixN1i t_di;              // nearest duct segment index (per node)
+  MatrixN1d t_dfnd;            // distance to nearest duct segment (per node)
+  MatrixN1d t_dad;             // distance along duct segment from in to out (per node)
+  MatrixN1i tri_types;         // triangle type: APICAL, BASOLATERAL, BASAL
+  void calc_nd(cDuctTree* dtree);
+  void write_mesh_file(std::string mesh_name);
 
   private:
-//  cCell_calcium* parent;
-//  void calc_common();
-//  void calc_dfa();
-//  void calc_apical_basal();
-//  void calc_dfb();
+  void print_info();
   void read_mesh_file(std::string mesh_name);
-  void write_mesh_file();
-  void calc_nd(const cDuctTree* dtree);
-//  void identify_common_apical_triangles();
 };
 
 #endif /* CCELLMESH_H_ */

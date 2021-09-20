@@ -40,8 +40,7 @@ void utils::fatal_error(const std::string msg)
   exit(1);
 }
 
-/*
-double utils::get_distance(const Vector3d& p, const Vector3d& v, const Vector3d& w)
+double utils::get_distance(Vector3d p, Vector3d v, Vector3d w, double* pd)
 {
   // Return minimum distance between line segment vw and point p
   double l2 = (w - v).squaredNorm();      // |w-v|^2		avoid a sqrt
@@ -51,9 +50,9 @@ double utils::get_distance(const Vector3d& p, const Vector3d& v, const Vector3d&
   // Clamp t from [0,1] to handle points outside the segment vw.
   double t = std::max(0.0, std::min(1.0, (p - v).dot(w - v) / l2)); // max(0, min(1, dot(p - v, w - v) / l2));
   const Vector3d projection = v + (t * (w - v));                    // Projection falls on the segment
+  *pd = (projection - v).norm();
   return ((projection - p).norm());                                 // return distance(p, projection)
 }
-*/
 /*
 void utils::read_mesh(const std::string file_name, sMeshVals& mesh_vals)
 {

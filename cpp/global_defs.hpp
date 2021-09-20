@@ -43,13 +43,14 @@ typedef Eigen::Matrix<int, Eigen::Dynamic, 4, Eigen::RowMajorBit> MatrixN4i;
 //typedef Eigen::Matrix<int, Eigen::Dynamic, CCONNCOUNT, Eigen::RowMajorBit> MatrixNCi;
 //typedef Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic> MatrixNNi;
 
-//typedef Eigen::Vector3d Vector3d;
+typedef Eigen::Vector3d Vector3d;
 //typedef Eigen::Vector3i Vector3i;
 //typedef Eigen::Vector4i Vector4i;
 
 //************************************************************************
-// cell types
+// cell and triangle types
 enum cell_types { ACINUS, INTERCALATED, STRIATED, UNKNOWN };
+enum tri_types { APICAL, BASOLATERAL, BASAL };
 
 //************************************************************************
 //************************************************************************

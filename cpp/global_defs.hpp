@@ -13,18 +13,6 @@
 //#include <string>
 
 //************************************************************************
-// model sizes
-//	NOTE: a single acinus with lumen (for now)
-//#define CELLS_COUNT 7
-
-//************************************************************************
-// MPI defs, macros
-
-//#define ACINUS_CELL_TAG 400
-//#define CELL_CELL_TAG 401
-//#define LUMEN_CELL_TAG 402
-
-//************************************************************************
 // cell to cell connectivity
 //  this_triangle, other_cell, other_triangle
 //enum cell_conn { tTri, oCell, oTri, CCONNCOUNT };

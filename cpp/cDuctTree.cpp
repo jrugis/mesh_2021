@@ -71,9 +71,9 @@ void cDuctTree::get_dnd(Eigen::Vector3d p, int* seg, double* dist, double* pdist
   double d, pd;
   *dist = 500.0; // large dummy initial distance
   for (int n = 0; n < segments_count; n++) {
-    v = nodes.block<1, 3>(segments(n, 0), 0);
-    w = nodes.block<1, 3>(segments(n, 1), 0);
-    d = utils::get_distance(p, w, v, &pd);
+    v = nodes.block<1, 3>(segments(n, 0), 0); // in node
+    w = nodes.block<1, 3>(segments(n, 1), 0); // out node
+    d = utils::get_distance(p, v, w, &pd);
 	if (d < *dist){
 	    *dist = d;      // distance to nearest duct segment
 		*pdist = pd;    // distance along duct segment

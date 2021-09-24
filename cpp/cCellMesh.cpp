@@ -99,8 +99,30 @@ void cCellMesh::write_mesh_file(std::string mesh_name)
 
   // create the mesh file
   std::ofstream mesh_file(mesh_name); 
-
-
+  mesh_file << "ply\n";
+  mesh_file << "format ascii 1.0\n";
+  mesh_file << "comment created by ply2ply\n";
+  mesh_file << "element vertex " << vertices_count << "\n";
+  mesh_file << "property float x\n";
+  mesh_file << "property float y\n";
+  mesh_file << "property float z\n";
+  mesh_file << "element face " << surface_triangles_count << "\n";
+  mesh_file << "property list uchar uint vertex_indices\n";
+  mesh_file << "property int tri_type\n";
+  mesh_file << "property int duct_idx\n";
+  mesh_file << "property float dist_from_duct\n";
+  mesh_file << "property float dist_along_duct\n";
+  mesh_file << "end_header\n";
+  for(int i=0; i<vertices_count; i++){
+  	for(int j=0; j<3; j++) mesh_file << vertices(i,j) << " ";
+	mesh_file << "\n";
+  }
+  for(int i=0; i<surface_triangles_count; i++){
+  	mesh_file << "3 ";
+  	for(int j=0; j<3; j++) mesh_file << surface_triangles(i,j) << " ";
+	mesh_file << tri_types(i) << " " << t_di(i) << " ";
+	mesh_file << t_dnd(i) << " " << t_dad(i) << "\n";
+  }
   mesh_file.close();
 }
 
@@ -115,7 +137,7 @@ void cCellMesh::calc_nd(cDuctTree* dtree) // triangle to duct measurements
 {
   std::cout << "<CellMesh> Calculating duct distances and face types..." << std::endl;
   t_di.resize(surface_triangles_count, Eigen::NoChange);       // nearest duct segment index
-  t_dfnd.resize(surface_triangles_count, Eigen::NoChange);     // distance to the nearest duct segment
+  t_dnd.resize(surface_triangles_count, Eigen::NoChange);     // distance to the nearest duct segment
   t_dad.resize(surface_triangles_count, Eigen::NoChange);      // distance along nearest duct segment
   tri_types.resize(surface_triangles_count, Eigen::NoChange); 
   for (int n = 0; n < surface_triangles_count; n++){
@@ -123,9 +145,9 @@ void cCellMesh::calc_nd(cDuctTree* dtree) // triangle to duct measurements
     Vector3d v2 = vertices.row(surface_triangles(n,1));
     Vector3d v3 = vertices.row(surface_triangles(n,2));
     Vector3d cp = (v1 + v2 + v3) / 3.0;        // use center point of triangle for distance calculations
-	dtree->get_dnd(cp, &t_di(n), &t_dfnd(n), &t_dad(n));
-	if(t_dfnd(n) < APICAL_D) tri_types(n) = APICAL;
-	else if(t_dfnd(n) > BASAL_D) tri_types(n) = BASAL;
+	dtree->get_dnd(cp, &t_di(n), &t_dnd(n), &t_dad(n));
+	if(t_dnd(n) < APICAL_D) tri_types(n) = APICAL;
+	else if(t_dnd(n) > BASAL_D) tri_types(n) = BASAL;
     else tri_types(n) = BASOLATERAL;
   }
 }

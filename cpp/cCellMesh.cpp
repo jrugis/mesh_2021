@@ -114,8 +114,9 @@ void cCellMesh::write_mesh_file(std::string mesh_name)
   mesh_file << "property float dist_along_duct\n";
   mesh_file << "end_header\n";
   for(int i=0; i<vertices_count; i++){
-  	for(int j=0; j<3; j++) mesh_file << vertices(i,j) << " ";
-	mesh_file << "\n";
+  	mesh_file << vertices(i,0) << " ";
+  	mesh_file << vertices(i,1) << " ";
+  	mesh_file << vertices(i,2) << "\n";
   }
   for(int i=0; i<surface_triangles_count; i++){
   	mesh_file << "3 ";

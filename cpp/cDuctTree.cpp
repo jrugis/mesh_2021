@@ -50,17 +50,21 @@ void cDuctTree::read_mesh_file(std::string mesh_name)
   }
   // get duct nodes
   nodes.resize(nodes_count, Eigen::NoChange);
+  radii.resize(nodes_count, Eigen::NoChange);
   for(int i=0; i<nodes_count; i++){
   	getline(duct_file, line);
   	boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
   	for(int j=0; j<3; j++) nodes(i,j) = std::stod(tokens[j]);
+	radii(i) = std::stod(tokens[3]);
   }
   // get duct segments
   segments.resize(segments_count, Eigen::NoChange);
+  seg_type.resize(segments_count, Eigen::NoChange);
   for(int i=0; i<segments_count; i++){
   	getline(duct_file, line);
   	boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
   	for(int j=0; j<2; j++) segments(i,j) = std::stoi(tokens[j]);
+	seg_type(i) = std::stoi(tokens[2]);
   }
   duct_file.close();
 }

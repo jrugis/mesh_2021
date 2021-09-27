@@ -32,7 +32,7 @@ int main(int argc, char** args)
 	if(fpath.find("bCell_")==std::string::npos) continue;
     cCellMesh* cmesh = new cCellMesh(fpath);    // convert a cell mesh file
 	cmesh->calc_nd(dtree);
-	cmesh->write_mesh_file(fpath.erase(9,1));
+	cmesh->write_mesh_file(fpath.erase(9,1).erase(17,2).replace(13,1,"_S"));
     delete cmesh;
   }
   delete dtree;

@@ -6,6 +6,7 @@ __pycache__/
 *.msh
 *.png
 *.vtk
+*.zip
 *Cell*.ply
 *test*
 minigland_26.blend

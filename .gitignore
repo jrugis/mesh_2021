@@ -1,4 +1,4 @@
-.DS_Store
+*DS_Store
 __pycache__/
 *.tif
 *.geo
@@ -9,7 +9,7 @@ __pycache__/
 *.zip
 *Cell*.ply
 *test*
-minigland_26.blend
+minigland_*blend
 *.blend1
 *.o
 ply2ply

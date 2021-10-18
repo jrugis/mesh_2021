@@ -10,6 +10,10 @@ minigland_xx.blend
 23 - 
 24 - duct_full, outter_full. part_outter
 25 - animation testing: stop at frame 21, then two more unconstrained
+26
+27
+28
+29 - striated/intercalated only, animation same as 25
 
 - acinii without lumen
 - sum acinar cells into intercalated duct  

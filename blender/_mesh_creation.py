@@ -142,7 +142,7 @@ def save_locations(cname):
   cfile = open(C_FILE+cname+".txt", 'w')
   for obj in bpy.data.collections[cname].all_objects:
     obj.select_set(True)
-    cfile.write("{:.3f} {:.3f} {:.3f}\n".format(obj.location.x,obj.location.y,obj.location.z))
+    cfile.write("{:.2f} {:.2f} {:.2f}\n".format(obj.location.x,obj.location.y,obj.location.z))
     obj.select_set(False)
   cfile.close()
   return

@@ -32,10 +32,10 @@ cCellMesh::~cCellMesh() {}
 void cCellMesh::read_mesh_file(std::string mesh_name)
 {
   std::cout << "<CellMesh> reading mesh file: " + mesh_name << std::endl;
-  char ct = mesh_name.at(mesh_name.length()-5);
-  if(ct=='A') ctype = ACINUS;
-  else if(ct=='I') ctype = INTERCALATED;
-  else if(ct=='S') ctype = STRIATED;
+  char ct = mesh_name.at(10);
+  if(ct=='a') ctype = ACINUS;
+  else if(ct=='i') ctype = INTERCALATED;
+  else if(ct=='s') ctype = STRIATED;
   else ctype = UNKNOWN;
   
   std::string line;                    // file line buffer
@@ -109,6 +109,7 @@ void cCellMesh::write_mesh_file(std::string mesh_name)
   mesh_file << "element face " << surface_triangles_count << "\n";
   mesh_file << "property list uchar uint vertex_indices\n";
   mesh_file << "property int tri_type\n";
+  //mesh_file << "property int intensity\n";
   mesh_file << "property int duct_idx\n";
   mesh_file << "property float dist_from_duct\n";
   mesh_file << "property float dist_along_duct\n";
@@ -138,19 +139,25 @@ void cCellMesh::calc_nd(cDuctTree* dtree) // triangle to duct measurements
 {
   std::cout << "<CellMesh> Calculating duct distances and face types..." << std::endl;
   t_di.resize(surface_triangles_count, Eigen::NoChange);       // nearest duct segment index
-  t_dnd.resize(surface_triangles_count, Eigen::NoChange);     // distance to the nearest duct segment
+  t_dnd.resize(surface_triangles_count, Eigen::NoChange);      // distance to the nearest duct segment
   t_dad.resize(surface_triangles_count, Eigen::NoChange);      // distance along nearest duct segment
-  tri_types.resize(surface_triangles_count, Eigen::NoChange); 
+  tri_types.resize(surface_triangles_count, Eigen::NoChange);
+  int napical = 0;
+  int nbasal = 0;
+  int nbasolateral = 0;
   for (int n = 0; n < surface_triangles_count; n++){
     Vector3d v1 = vertices.row(surface_triangles(n,0));
     Vector3d v2 = vertices.row(surface_triangles(n,1));
     Vector3d v3 = vertices.row(surface_triangles(n,2));
     Vector3d cp = (v1 + v2 + v3) / 3.0;        // use center point of triangle for distance calculations
 	dtree->get_dnd(cp, &t_di(n), &t_dnd(n), &t_dad(n));
-	if(t_dnd(n) < APICAL_D) tri_types(n) = APICAL;
-	else if(t_dnd(n) > BASAL_D) tri_types(n) = BASAL;
-    else tri_types(n) = BASOLATERAL;
+	double rad = dtree->get_radius(t_di(n), t_dad(n));
+	if(t_dnd(n) < (rad + APICAL_D)) { tri_types(n) = APICAL; napical++; }
+	else if(t_dnd(n) > (rad + BASAL_D)) { tri_types(n) = BASAL; nbasal++; }
+    else { tri_types(n) = BASOLATERAL; nbasolateral++; }
   }
+  std::cout << "<CellMesh> apical:" << napical << "  basal:" << nbasal << "  basolateral:" << nbasolateral << std::endl;
+  if(napical == 0) std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
 }
 
 /*

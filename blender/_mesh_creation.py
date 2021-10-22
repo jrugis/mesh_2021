@@ -148,13 +148,14 @@ def save_locations(cname):
   return
  
 ## save the cell meshes as ply files
-def save_cell_meshes():
-  os.system("rm bCell*.ply")
-  for obj in bpy.data.collections["Duct"].all_objects: obj.select_set(False)
-  for obj in bpy.data.collections["Cells"].all_objects: obj.select_set(False)
-  for obj in bpy.data.collections["Cells"].all_objects:
+def save_cell_meshes(cname):
+  os.system("rm " + cname + "*.ply")
+  #for obj in bpy.data.collections["Duct"].all_objects: obj.select_set(False)
+  #for obj in bpy.data.collections["Cells"].all_objects: obj.select_set(False)
+  bpy.ops.object.select_all(action='DESELECT')
+  for obj in bpy.data.collections[cname].all_objects:
     obj.select_set(True)
-    bpy.ops.export_mesh.ply(filepath="b"+obj.name.replace('.', '_') + "_S.ply", use_ascii=True,\
+    bpy.ops.export_mesh.ply(filepath="./meshes/b"+obj.name.replace('.', '_')+".ply", use_ascii=True,\
       use_normals=False, use_uv_coords=False, use_colors=False, use_selection=True)
     obj.select_set(False)
   return

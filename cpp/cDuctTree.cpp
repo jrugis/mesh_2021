@@ -75,15 +75,23 @@ void cDuctTree::get_dnd(Eigen::Vector3d p, int* seg, double* dist, double* pdist
   double d, pd;
   *dist = 500.0; // large dummy initial distance
   for (int n = 0; n < segments_count; n++) {
-    v = nodes.block<1, 3>(segments(n, 0), 0); // in node
+	v = nodes.block<1, 3>(segments(n, 0), 0); // in node
     w = nodes.block<1, 3>(segments(n, 1), 0); // out node
     d = utils::get_distance(p, v, w, &pd);
 	if (d < *dist){
-	    *dist = d;      // distance to nearest duct segment
-		*pdist = pd;    // distance along duct segment
-		*seg = n;       // nearest duct segment index
-	}
+	  *dist = d;      // distance to nearest duct segment
+	  *pdist = pd;    // distance along duct segment
+	  *seg = n;       // nearest duct segment index
+    }
   }
+}
+
+double cDuctTree::get_radius(int seg, double pdist)
+{
+  double n1 = segments(seg,0);  // endpoint node indices
+  double n2 = segments(seg,1);
+  double rr = pdist / ((nodes.block<1, 3>(n2,0) - nodes.block<1, 3>(n1,0)).norm()); // fractional distance along segment (0.0 - 1.0)
+  return(((1 - rr) * radii(n1)) + (rr * radii(n2)));  // linear interpolation of radius
 }
 
 void cDuctTree::print_info()

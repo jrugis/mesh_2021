@@ -17,6 +17,7 @@ class cDuctTree {
   cDuctTree(std::string fname);
   ~cDuctTree();
   void get_dnd(Eigen::Vector3d p, int* seg, double* dist, double* pdist);
+  double get_radius(int seg, double pdist);
 
   private:
   int nodes_count, segments_count;  // the number of nodes and segments in the lumen tree

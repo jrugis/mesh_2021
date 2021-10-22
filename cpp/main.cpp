@@ -29,10 +29,11 @@ int main(int argc, char** args)
   // iterate through the cell mesh files outputing a copy of each one with additional data
   for (const auto &file : std::filesystem::directory_iterator("./meshes")){
 	std::string fpath = std::filesystem::path(file.path());
-	if(fpath.find("bCell_")==std::string::npos) continue;
-    cCellMesh* cmesh = new cCellMesh(fpath);    // convert a cell mesh file
+	if(fpath.compare(9,1,"b") != 0) continue;
+	std::cout << fpath << std::endl;
+	cCellMesh* cmesh = new cCellMesh(fpath);    // convert a cell mesh file
 	cmesh->calc_nd(dtree);
-	cmesh->write_mesh_file(fpath.erase(9,1).erase(17,2).replace(13,1,"_S"));
+	cmesh->write_mesh_file(fpath.erase(9,1));
     delete cmesh;
   }
   delete dtree;

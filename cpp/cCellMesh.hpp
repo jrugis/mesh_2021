@@ -8,8 +8,8 @@
 #ifndef CCELLMESH_H_
 #define CCELLMESH_H_
 
-#define APICAL_D 5.5 
-#define BASAL_D 20 
+#define APICAL_D 1.8   // radial distance out from duct 
+#define BASAL_D 15.0
 
 #include <Eigen/Dense>
 #include <string>
@@ -30,7 +30,7 @@ class cCellMesh {
   MatrixN3i surface_triangles; // 3x vertex indices
   MatrixN4i tetrahedrons;      // 4x vertex indices
   MatrixN1i t_di;              // nearest duct segment index (per node)
-  MatrixN1d t_dnd;            // distance to nearest duct segment (per node)
+  MatrixN1d t_dnd;             // distance to nearest duct segment (per node)
   MatrixN1d t_dad;             // distance along duct segment from in to out (per node)
   MatrixN1i tri_types;         // triangle type: APICAL, BASOLATERAL, BASAL
   void calc_nd(cDuctTree* dtree);

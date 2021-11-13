@@ -15,8 +15,46 @@ minigland_xx.blend
 28
 29 - striated/intercalated only, animation same as 25
 
-- acinii without lumen
-- sum acinar cells into intercalated duct  
+constraint meshes
+-----------------
+_inner_NEW.ply
+_outer_NEW.ply
+_acinus_outer_NEW.ply
+
+minigland_xxx.blend
+100 - growing acinii outer constraints
+       m.init_mini_gland()
+	   Duct collection: m.load_duct_inner(), m.load_duct_outer()
+	   Acinus_outer collection: m.load_acinii()
+	   acinii collection: m.load_cells("acinii")
+	   grow to 65, then 73 w/o Acinus_outer, then 76 w/o duct
+	   m.save_locations("acinii")
+	   m.load_cells("acinii")
+	   export _acinus_x.ply files
+
+101 - growing acinar cells
+       duct_inner collection: m.load_duct_inner()
+       acinus_outer collection: m.load_acinus("1")
+	   a1 collection: m.load_cells("a1")
+	   grow to 14, then 15 w/o acinus_outer, then 17 w/o duct_inner
+       m.save_cell_meshes("a1")
+	   m.save_locations("a1")
+	   m.load_cells("a1")
+
+
+++++++++++++++
+bpy.ops.object.modifier_add(type='SMOOTH')
+bpy.context.object.modifiers["Smooth"].factor = 1.2
+bpy.context.object.modifiers["Smooth"].iterations = 6
+bpy.ops.object.modifier_apply(modifier="Smooth")
+++++++++++++++
+
+
+cell meshes
+-----------
+biCells_xxx.ply
+bsCells_xxx.ply
+bax_xxx.ply
 
 visualisation notes:
  Blender: multi-material assigned to object then by face
@@ -26,8 +64,7 @@ Paraview: fixed names and types for vertices & faces (uchar only?)
      face   - "vertex_indices", "intensity", "red", "green", "blue", and "alpha"
 
 todo
-- cell seeds by group?
-- mesh files with face type
+
 
 **********************************************
 **********************************************

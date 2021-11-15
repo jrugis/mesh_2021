@@ -43,7 +43,7 @@ C_RADIUS = 3.2                       # seed cell radius
 
 # cell type dictionary
 cell_types = {  
-  "acinii" : {"COLOR":(0.8,   0.8,   0.8,   1.0), "PRESSURE":1.0, "STIFFNESS":0.09, "RADIUS":4.5},
+  "acinii" : {"COLOR":(0.8,   0.8,   0.8,   1.0), "PRESSURE":1.1, "STIFFNESS":0.07, "RADIUS":4.5},
   "a1"     : {"COLOR":(1.000, 0.055, 0.060, 1.0), "PRESSURE":1.2, "STIFFNESS":0.11, "RADIUS":3.2},
   "iCells" : {"COLOR":(1.000, 0.100, 0.120, 1.0), "PRESSURE":1.2, "STIFFNESS":0.11, "RADIUS":2.5},
   "sCells" : {"COLOR":(1.000, 0.200, 0.240, 1.0), "PRESSURE":1.2, "STIFFNESS":0.11, "RADIUS":3.2}    
@@ -146,6 +146,25 @@ def save_cell_meshes(cname):
     obj.select_set(True)
     bpy.ops.export_mesh.ply(filepath="./meshes/b"+obj.name.replace('.', '_')+".ply", use_ascii=True,\
       use_normals=False, use_uv_coords=False, use_colors=False, use_selection=True)
+    obj.select_set(False)
+  return
+
+# smooth mesh objects
+def smoooth_meshes(cname):
+  for obj in bpy.data.collections[cname].all_objects:
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.modifier_add(type='SMOOTH')
+    if cname == "iCells":
+      bpy.context.object.modifiers["Smooth"].factor = 0.8
+      bpy.context.object.modifiers["Smooth"].iterations = 5
+    else :
+      bpy.context.object.modifiers["Smooth"].factor = 1.2
+      bpy.context.object.modifiers["Smooth"].iterations = 6
+
+
+    #bpy.ops.object.modifier_move_to_index(modifier="Smooth", index=0)
+    #bpy.ops.object.modifier_apply(modifier="Smooth")
     obj.select_set(False)
   return
 

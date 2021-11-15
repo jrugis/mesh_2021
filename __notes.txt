@@ -24,10 +24,10 @@ _acinus_outer_NEW.ply
 minigland_xxx.blend
 100 - growing acinii outer constraints
        m.init_mini_gland()
-	   Duct collection: m.load_duct_inner(), m.load_duct_outer()
+	   Duct collection: m.load_duct_outer()
 	   Acinus_outer collection: m.load_acinii()
 	   acinii collection: m.load_cells("acinii")
-	   grow to 65, then 73 w/o Acinus_outer, then 76 w/o duct
+	   grow to 20, then 22 w/o Acinus_outer, then 23 w/o Duct
 	   m.save_locations("acinii")
 	   m.load_cells("acinii")
 	   export _acinus_x.ply files
@@ -36,18 +36,25 @@ minigland_xxx.blend
        duct_inner collection: m.load_duct_inner()
        acinus_outer collection: m.load_acinus("1")
 	   a1 collection: m.load_cells("a1")
-	   grow to 14, then 15 w/o acinus_outer, then 17 w/o duct_inner
+	   grow to 14, then 16 w/o acinus_outer, then 17 w/o duct_inner
+	   m.smoooth_meshes("a1")
        m.save_cell_meshes("a1")
 	   m.save_locations("a1")
 	   m.load_cells("a1")
 
-
-++++++++++++++
-bpy.ops.object.modifier_add(type='SMOOTH')
-bpy.context.object.modifiers["Smooth"].factor = 1.2
-bpy.context.object.modifiers["Smooth"].iterations = 6
-bpy.ops.object.modifier_apply(modifier="Smooth")
-++++++++++++++
+102 - growing duct cells
+	   Duct collection: m.load_duct_inner(), m.load_duct_outer()
+	   iCells collection: m.load_cells("iCells")
+	   sCells collection: m.load_cells("sCells")
+	   grow to 19, then 22 w/o Duct
+	   m.smoooth_meshes("iCells")
+	   m.smoooth_meshes("sCells")
+       m.save_cell_meshes("iCells")
+       m.save_cell_meshes("sCells")
+	   m.save_locations("iCells")
+	   m.save_locations("sCells")
+	   m.load_cells("iCells")
+	   m.load_cells("sCells")
 
 
 cell meshes

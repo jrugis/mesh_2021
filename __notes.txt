@@ -22,27 +22,27 @@ _outer_NEW.ply
 _acinus_outer_NEW.ply
 
 minigland_xxx.blend
-100 - growing acinii outer constraints
+100   growing acinii outer constraints
        m.init_mini_gland()
-	   Duct collection: m.load_duct_outer()
+	   Duct collection: m.load_duct_outer(), duct thickness outer = 0.1
 	   Acinus_outer collection: m.load_acinii()
 	   acinii collection: m.load_cells("acinii")
-	   grow to 20, then 22 w/o Acinus_outer, then 23 w/o Duct
+	   grow to 20, then 22 w/o Acinus_outer
 	   m.save_locations("acinii")
 	   m.load_cells("acinii")
 	   export _acinus_x.ply files
 
-101 - growing acinar cells
+101-x growing acinar cells
        duct_inner collection: m.load_duct_inner()
-       acinus_outer collection: m.load_acinus("1")
-	   a1 collection: m.load_cells("a1")
+       acinus_outer collection: m.load_acinus("x")
+	   a1 collection: m.load_cells("ax")
 	   grow to 14, then 16 w/o acinus_outer, then 17 w/o duct_inner
-	   m.smoooth_meshes("a1")
-       m.save_cell_meshes("a1")
-	   m.save_locations("a1")
-	   m.load_cells("a1")
+	   m.smoooth_meshes("ax")
+       m.save_cell_meshes("ax")
+	   m.save_locations("ax")
+	   m.load_cells("ax")
 
-102 - growing duct cells
+102   growing duct cells
 	   Duct collection: m.load_duct_inner(), m.load_duct_outer()
 	   iCells collection: m.load_cells("iCells")
 	   sCells collection: m.load_cells("sCells")
@@ -71,6 +71,8 @@ Paraview: fixed names and types for vertices & faces (uchar only?)
      face   - "vertex_indices", "intensity", "red", "green", "blue", and "alpha"
 
 todo
+  - Ascl3 cells: random 30% of striated cells
+  - C26 marks intercalated cell gap junctions
 
 
 **********************************************

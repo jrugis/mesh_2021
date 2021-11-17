@@ -21,6 +21,7 @@
 # ...
 
 import bpy
+import glob
 import mathutils
 import os 
 
@@ -44,7 +45,12 @@ C_RADIUS = 3.2                       # seed cell radius
 # cell type dictionary
 cell_types = {  
   "acinii" : {"COLOR":(0.8,   0.8,   0.8,   1.0), "PRESSURE":1.1, "STIFFNESS":0.07, "RADIUS":4.5},
-  "a1"     : {"COLOR":(1.000, 0.055, 0.060, 1.0), "PRESSURE":1.2, "STIFFNESS":0.11, "RADIUS":3.2},
+  "a1"     : {"COLOR":(1.000, 0.055, 0.060, 1.0), "PRESSURE":1.1, "STIFFNESS":0.11, "RADIUS":3.2},
+  "a2"     : {"COLOR":(1.000, 0.055, 0.060, 1.0), "PRESSURE":1.1, "STIFFNESS":0.11, "RADIUS":3.2},
+  "a3"     : {"COLOR":(1.000, 0.055, 0.060, 1.0), "PRESSURE":1.1, "STIFFNESS":0.11, "RADIUS":3.2},
+  "a4"     : {"COLOR":(1.000, 0.055, 0.060, 1.0), "PRESSURE":1.1, "STIFFNESS":0.11, "RADIUS":3.2},
+  "a5"     : {"COLOR":(1.000, 0.055, 0.060, 1.0), "PRESSURE":1.1, "STIFFNESS":0.11, "RADIUS":3.2},
+  "a6"     : {"COLOR":(1.000, 0.055, 0.060, 1.0), "PRESSURE":1.1, "STIFFNESS":0.11, "RADIUS":3.2},
   "iCells" : {"COLOR":(1.000, 0.100, 0.120, 1.0), "PRESSURE":1.2, "STIFFNESS":0.11, "RADIUS":2.5},
   "sCells" : {"COLOR":(1.000, 0.200, 0.240, 1.0), "PRESSURE":1.2, "STIFFNESS":0.11, "RADIUS":3.2}    
 }
@@ -149,6 +155,16 @@ def save_cell_meshes(cname):
     obj.select_set(False)
   return
 
+# load mesh files
+def load_cell_meshes(cname):
+  mat = bpy.data.materials.new(name="mat."+cname)
+  mat.diffuse_color = cell_types[cname]["COLOR"]
+  for fname in glob.glob("./meshes/b"+cname+"*.ply"):
+    bpy.ops.import_mesh.ply(filepath = fname)
+    bpy.context.object.name = cname+".001"    # duplicate names will auto increment
+    bpy.context.object.data.materials.append(mat) # add material to object
+  return
+
 # smooth mesh objects
 def smoooth_meshes(cname):
   for obj in bpy.data.collections[cname].all_objects:
@@ -161,10 +177,6 @@ def smoooth_meshes(cname):
     else :
       bpy.context.object.modifiers["Smooth"].factor = 1.2
       bpy.context.object.modifiers["Smooth"].iterations = 6
-
-
-    #bpy.ops.object.modifier_move_to_index(modifier="Smooth", index=0)
-    #bpy.ops.object.modifier_apply(modifier="Smooth")
     obj.select_set(False)
   return
 

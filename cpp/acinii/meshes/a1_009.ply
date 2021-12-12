@@ -1,6 +1,6 @@
 ply
 format ascii 1.0
-comment created by ply2ply
+comment created by msh2ply
 element vertex 6131
 property float x
 property float y

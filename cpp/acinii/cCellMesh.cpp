@@ -91,7 +91,7 @@ void cCellMesh::write_mesh_file(std::string mesh_name)
   std::ofstream mesh_file(mesh_name); 
   mesh_file << "ply\n";
   mesh_file << "format ascii 1.0\n";
-  mesh_file << "comment created by ply2ply\n";
+  mesh_file << "comment created by msh2ply\n";
   mesh_file << "element vertex " << vertices_count << "\n";
   mesh_file << "property float x\n";
   mesh_file << "property float y\n";

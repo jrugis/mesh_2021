@@ -91,7 +91,10 @@ blender: create mesh ply files
   bCell_xxx_X.ply
   
 gmsh: add tetrahedorns
-  bCell_xxx_A.ply -> gCell_xxx_A.mesh
+  Acinus.geo , 3D, export .msh ASCII v2
+  baX_0XX.ply -> aX_0XX.msh
+  
+  ???  bCell_xxx_A.ply -> gCell_xxx_A.mesh
    
 cpp: add calculated values
   _duct.ply + bCell_xxx_S.ply -> Cell_xxx_S.ply

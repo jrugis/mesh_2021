@@ -6,9 +6,9 @@ minigland_xx.blend
 10 - reduced stack
 20 - minigland, four acinii 
 21 - duct mesh, two acinii
-22 - duct outter
+22 - duct outer
 23 - 
-24 - duct_full, outter_full. part_outter
+24 - duct_full, outer_full. part_outer
 25 - animation testing: stop at frame 21, then two more unconstrained
 26
 27
@@ -42,7 +42,7 @@ minigland_xxx.blend
 	   m.save_locations("ax")
 	   m.load_cells("ax")
 
-102   growing duct cells
+102   growing duct cells (using _m.py)
 	   Duct collection: m.load_duct_inner(), m.load_duct_outer()
 	   iCells collection: m.load_cells("iCells")
 	   sCells collection: m.load_cells("sCells")

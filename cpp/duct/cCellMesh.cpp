@@ -152,12 +152,16 @@ void cCellMesh::calc_nd(cDuctTree* dtree) // triangle to duct measurements
     Vector3d cp = (v1 + v2 + v3) / 3.0;        // use center point of triangle for distance calculations
 	dtree->get_dnd(cp, &t_di(n), &t_dnd(n), &t_dad(n));
 	double rad = dtree->get_radius(t_di(n), t_dad(n));
-	if(t_dnd(n) < (rad + APICAL_D)) { tri_types(n) = APICAL; napical++; }
-	else if(t_dnd(n) > (rad + BASAL_D)) { tri_types(n) = BASAL; nbasal++; }
+	
+	double apical_d = (ctype==INTERCALATED ? I_APICAL_D : S_APICAL_D);   // intercalated or striated?
+	double basal_d = (ctype==INTERCALATED ? I_BASAL_D : S_BASAL_D);
+	if(t_dnd(n) < (rad + apical_d)) { tri_types(n) = APICAL; napical++; }
+	else if(t_dnd(n) > (rad + basal_d)) { tri_types(n) = BASAL; nbasal++; }
     else { tri_types(n) = BASOLATERAL; nbasolateral++; }
   }
   std::cout << "<CellMesh> apical:" << napical << "  basal:" << nbasal << "  basolateral:" << nbasolateral << std::endl;
-  if(napical == 0) std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
+  if(napical == 0) std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << std::endl;
+  if(nbasal == 0) std::cout << "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB" << std::endl;
 }
 
 /*

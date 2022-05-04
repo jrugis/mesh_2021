@@ -10,15 +10,15 @@
 # setup and useage
 #-------------------------------------------------------------------------------
 # ---- mac terminal ----
-# cd Desktop/nesi00119/mesh_2021
+# cd Desktop/nesi00119/mesh_2021/blender
 # /Applications/Blender.app/Contents/MacOS/Blender
 #
 # ---- blender / python console----
 # import importlib
 # import _mesh_creation as m
-# importlib.reload(_mesh_creation)
+# importlib.reload(m)
 #
-# m.init_mini_glnad()
+# m.init_mini_gland()
 # m.load_duct()   
 # m.load_cells("striated")
 # ...
@@ -149,7 +149,7 @@ def save_locations(cname):
  
 ## save the cell meshes as ply files
 def save_cell_meshes(cname):
-  os.system("rm " + cname + "*.ply")
+  os.system("rm ./meshes/*" + cname + "*.ply")
   #for obj in bpy.data.collections["Duct"].all_objects: obj.select_set(False)
   #for obj in bpy.data.collections["Cells"].all_objects: obj.select_set(False)
   bpy.ops.object.select_all(action='DESELECT')

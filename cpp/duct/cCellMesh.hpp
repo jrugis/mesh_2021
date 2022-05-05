@@ -10,7 +10,7 @@
 
 #define I_APICAL_D 1.8   // radial distance out from duct 
 #define S_APICAL_D 4.1    
-#define I_BASAL_D 7.0
+#define I_BASAL_D 7.9
 #define S_BASAL_D 15.0
 
 #include <Eigen/Dense>

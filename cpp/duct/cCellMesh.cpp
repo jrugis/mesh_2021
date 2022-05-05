@@ -108,8 +108,8 @@ void cCellMesh::write_mesh_file(std::string mesh_name)
   mesh_file << "property float z\n";
   mesh_file << "element face " << surface_triangles_count << "\n";
   mesh_file << "property list uchar uint vertex_indices\n";
-  mesh_file << "property int tri_type\n";
-  //mesh_file << "property int intensity\n";
+  mesh_file << "property int tri_type\n";  // for matlab simulation
+  //mesh_file << "property int intensity\n";  // for paraview visualisation
   mesh_file << "property int duct_idx\n";
   mesh_file << "property float dist_from_duct\n";
   mesh_file << "property float dist_along_duct\n";
@@ -145,6 +145,8 @@ void cCellMesh::calc_nd(cDuctTree* dtree) // triangle to duct measurements
   int napical = 0;
   int nbasal = 0;
   int nbasolateral = 0;
+  double apical_d = (ctype==INTERCALATED ? I_APICAL_D : S_APICAL_D);   // intercalated or striated?
+  double basal_d = (ctype==INTERCALATED ? I_BASAL_D : S_BASAL_D);
   for (int n = 0; n < surface_triangles_count; n++){
     Vector3d v1 = vertices.row(surface_triangles(n,0));
     Vector3d v2 = vertices.row(surface_triangles(n,1));
@@ -153,8 +155,6 @@ void cCellMesh::calc_nd(cDuctTree* dtree) // triangle to duct measurements
 	dtree->get_dnd(cp, &t_di(n), &t_dnd(n), &t_dad(n));
 	double rad = dtree->get_radius(t_di(n), t_dad(n));
 	
-	double apical_d = (ctype==INTERCALATED ? I_APICAL_D : S_APICAL_D);   // intercalated or striated?
-	double basal_d = (ctype==INTERCALATED ? I_BASAL_D : S_BASAL_D);
 	if(t_dnd(n) < (rad + apical_d)) { tri_types(n) = APICAL; napical++; }
 	else if(t_dnd(n) > (rad + basal_d)) { tri_types(n) = BASAL; nbasal++; }
     else { tri_types(n) = BASOLATERAL; nbasolateral++; }

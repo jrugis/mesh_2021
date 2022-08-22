@@ -31,6 +31,7 @@ minigland_xxx.blend
 	   m.save_locations("acinii")
 	   m.load_cells("acinii")
 	   export _acinus_x.ply files
+   100_A publication color version 
 
 101-x growing acinar cells
        duct_inner collection: m.load_duct_inner()

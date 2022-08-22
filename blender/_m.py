@@ -10,13 +10,13 @@
 # setup and useage
 #-------------------------------------------------------------------------------
 # ---- mac terminal ----
-# cd Desktop/nesi00119/mesh_2021
+# cd Desktop/nesi00119/mesh_2021/blender
 # /Applications/Blender.app/Contents/MacOS/Blender
 #
 # ---- blender / python console----
 # import importlib
 # import _m as m
-# importlib.reload(_m)
+# importlib.reload(m)
 #
 # ...
 
